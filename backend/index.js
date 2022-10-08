@@ -6,7 +6,6 @@ let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
 // Initialise the app
 let app = express();
-
 // Import routes
 let apiRoutes = require("./api-routes");
 
@@ -38,6 +37,8 @@ app.get('/', (req, res) => res.send('Hello World with Express'));
 
 // Use Api routes in the App
 app.use('/api', apiRoutes);
+
+module.exports = app
 
 // Launch app to listen to specified port
 app.listen(port, function () {

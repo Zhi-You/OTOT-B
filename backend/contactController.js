@@ -13,7 +13,7 @@ exports.viewAll = function (req, res) {
         }
         res.json({
             status: "success",
-            message: "Contacts retrieved successfully",
+            message: "All contacts retrieved successfully",
             data: contacts
         });
     });
