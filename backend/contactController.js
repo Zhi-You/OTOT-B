@@ -3,7 +3,7 @@ Contact = require('./contactModel');
 
 
 // List all contacts
-exports.index = function (req, res) {
+exports.viewAll = function (req, res) {
     Contact.get(function (err, contacts) {
         if (err) {
             res.json({
@@ -42,7 +42,7 @@ exports.new = function (req, res) {
 };
 
 
-// Handle view contact info
+// Handle view contact info for a single contact
 exports.view = function (req, res) {
     console.log(req.params.contact_name);
 

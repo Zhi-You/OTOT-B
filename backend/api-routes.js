@@ -14,7 +14,7 @@ router.get('/', function (req, res) {
 
 // Contact routes
 router.route('/contacts')
-    .get(contactController.index)
+    .get(contactController.viewAll)
     .post(contactController.new);
 
 router.route('/contacts/:contact_name')
