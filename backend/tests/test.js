@@ -9,20 +9,7 @@ chai.should();
 
 describe ('Contact app API Tests', () => {
 
-    describe("Test GET API call on route /api/contacts to list all contacts", () => {
-        it("It should get and list all existing contacts", (done) => {
-            chai.request(app)
-                .get("/api/contacts")
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.status.should.equal("success");
-                    res.body.message.should.equal("All contacts retrieved successfully");
-                done();
-            })
-        })
-    })
-
-    describe("Test POST API call on route /api/contacts to add a new contact", () => {
+    describe("Test POST API calls", () => {
         it("It should add a new contact - Tester123", (done) => {
             chai.request(app)
                 .post("/api/contacts")
@@ -43,10 +30,8 @@ describe ('Contact app API Tests', () => {
                 done();
             })
         })
-    })
-
-    describe("Test POST API call on route /api/contacts to add a new contact without email", () => {
-        it("It should not add new contact as email is not specified", (done) => {
+        
+        it("INVALID - It should not add a new contact when specified schema is wrong", (done) => {
             chai.request(app)
                 .post("/api/contacts")
                 .type("form")
@@ -56,16 +41,27 @@ describe ('Contact app API Tests', () => {
                     "gender": "Male"
                 })
                 .end((err, res) => {
-                    res.body.errors.email.name.should.equal("ValidatorError");
-                    res.body.errors.email.message.should.equal("Path `email` is required.");
+                    res.should.have.status(400);
+                    res.body.name.should.equal("ValidationError");
                 done();
             })
         })
     })
 
 
-    describe("Test GET API call on route /api/contacts/:contact_name to return one contact", () => {
-        it("It should get Tester123's contact which we have just added", (done) => {
+    describe("Test GET API calls", () => {
+        it("It should get and list all existing contacts", (done) => {
+            chai.request(app)
+                .get("/api/contacts")
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.status.should.equal("success");
+                    res.body.message.should.equal("All contacts retrieved successfully");
+                done();
+            })
+        })
+
+        it("It should get one contact (Tester123) which we have just added", (done) => {
             const contact_name = "Tester123"
             chai.request(app)
                 .get("/api/contacts/" + contact_name)
@@ -76,41 +72,53 @@ describe ('Contact app API Tests', () => {
                 done();
             })
         })
+
+        it("INVALID - It should not get a contact that doesn't exist", (done) => {
+            const contact_name = "doesnotexist"
+            chai.request(app)
+                .get("/api/contacts/" + contact_name)
+                .end((err, res) => {
+                    res.should.have.status(404);
+                done();
+            })
+        })
     })
 
 
 
-    // describe("Test GET API call on route /api/contacts/:contact_name that should fail", () => {
-    //     it("It should not get a contact that doesn't exist", (done) => {
-    //         const contact_name = "doesnotexist"
-    //         chai.request(app)
-    //             .get("/api/contacts/" + contact_name)
-    //             .end((err, res) => {
-    //                 res.should.have.status(404);
-    //             done();
-    //         })
-    //     })
-    // })
+    describe("Test PATCH API calls", () => {
+        it("INVALID - It should not update a contact that doesnt exist", (done) => {
+            const name = 'doesnotexist'
+            chai.request(app)
+                .put("/api/contacts/" + name)
+                .send(
+                    {
+                        "name": "Updated123",
+                        "email": "updated123@gmail.com"
+                    }
+                )
+                .end((err, res) => {
+                    res.should.have.status(404);
+                done();
+            })
+        })
 
-    // describe("Test PATCH API call on route /api/contacts/:contact_name to update a contact", () => {
-    //     it("It should not update Tester123's contact since email is not specified", (done) => {
-    //         const name = 'Tester123'
-    //         chai.request(app)
-    //             .put("/api/contacts/" + name)
-    //             .send(
-    //                 {
-    //                     "name": "Updated123"
-    //                 }
-    //             )
-    //             .end((err, res) => {
-    //                 res.body.errors.email.name.should.equal("ValidatorError");
-    //                 res.body.errors.email.message.should.equal("Path `email` is required.");
-    //             done();
-    //         })
-    //     })
-    // })
+        it("INVALID - It should not update Tester123's contact since email is not specified", (done) => {
+            const name = 'Tester123'
+            chai.request(app)
+                .put("/api/contacts/" + name)
+                .send(
+                    {
+                        "name": "Updated123"
+                    }
+                )
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.name.should.equal("ValidationError");
+                done();
+            })
+        })
 
-    describe("Test PATCH API call on route /api/contacts/:contact_name to update a contact", () => {
         it("It should update Tester123's contact", (done) => {
             const name = 'Tester123'
             chai.request(app)
@@ -132,7 +140,9 @@ describe ('Contact app API Tests', () => {
         })
     })
 
-    describe("Test DELETE API call on route /api/contacts/:name to delete a contact", () => {
+
+
+    describe("Test DELETE API calls", () => {
         it("It should result in the deletion of our test contact", (done) => {
             const name = 'Updated123'
             chai.request(app)
@@ -140,7 +150,16 @@ describe ('Contact app API Tests', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.status.should.equal("success");
-                    res.body.message.should.equal("Contact deleted");
+                done();
+            })
+        })
+
+        it("INVALID - It should not delete a contact that doesn't exist", (done) => {
+            const name = "doesnotexist"
+            chai.request(app)
+                .delete("/api/contacts/" + name)
+                .end((err, res) => {
+                    res.should.have.status(404);
                 done();
             })
         })
