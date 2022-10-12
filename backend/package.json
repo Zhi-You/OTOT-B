@@ -4,7 +4,7 @@
   "description": "CS3219 OTOT Assignment Task B: Web Application Task",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/test.js --timeout 10000 --exit",
+    "test": "mocha tests/test.js --timeout 20000 --exit",
     "start": "nodemon index.js"
   },
   "keywords": [
