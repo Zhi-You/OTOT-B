@@ -1,18 +1,19 @@
-name: Node.js CI
+name: CI for contact list (task b)
 
 on: [push]
 
 jobs:
-  build:
-
+  continuous-integration:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        node-version: [16.x]
     steps:
       - uses: actions/checkout@v3
-      - name: Setup node version 
+      - name: Setup Node.js 
         uses: actions/setup-node@v3
         with:
-          node-version: 16.17.0
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm ci
       - run: npm test
