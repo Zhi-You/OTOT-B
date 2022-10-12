@@ -23,7 +23,7 @@ describe ('Contact app API Tests', () => {
     })
 
     describe("Test POST API call on route /api/contacts to add a new contact", () => {
-        it("It should result in the addition of a new contact - Tester123", (done) => {
+        it("It should add a new contact - Tester123", (done) => {
             chai.request(app)
                 .post("/api/contacts")
                 .send({
@@ -44,6 +44,23 @@ describe ('Contact app API Tests', () => {
         })
     })
 
+    describe("Test POST API call on route /api/contacts to add a new contact without email", () => {
+        it("It should not add new contact as email is not specified", (done) => {
+            chai.request(app)
+                .post("/api/contacts")
+                .send({
+                    "name": "Tester123",
+                    "phone": 987654321,
+                    "gender": "Male"
+                })
+                .end((err, res) => {
+                    res.body.errors.email.name.should.equal("ValidatorError");
+                    res.body.errors.email.message.should.equal("Path `email` is required.");
+                done();
+            })
+        })
+    })
+
 
     describe("Test GET API call on route /api/contacts/:contact_name to return one contact", () => {
         it("It should get Tester123's contact which we have just added", (done) => {
@@ -59,6 +76,8 @@ describe ('Contact app API Tests', () => {
         })
     })
 
+
+
     // describe("Test GET API call on route /api/contacts/:contact_name that should fail", () => {
     //     it("It should not get a contact that doesn't exist", (done) => {
     //         const contact_name = "doesnotexist"
@@ -71,8 +90,26 @@ describe ('Contact app API Tests', () => {
     //     })
     // })
 
+    // describe("Test PATCH API call on route /api/contacts/:contact_name to update a contact", () => {
+    //     it("It should not update Tester123's contact since email is not specified", (done) => {
+    //         const name = 'Tester123'
+    //         chai.request(app)
+    //             .put("/api/contacts/" + name)
+    //             .send(
+    //                 {
+    //                     "name": "Updated123"
+    //                 }
+    //             )
+    //             .end((err, res) => {
+    //                 res.body.errors.email.name.should.equal("ValidatorError");
+    //                 res.body.errors.email.message.should.equal("Path `email` is required.");
+    //             done();
+    //         })
+    //     })
+    // })
+
     describe("Test PATCH API call on route /api/contacts/:contact_name to update a contact", () => {
-        it("It should result in the update of Tester123's contact", (done) => {
+        it("It should update Tester123's contact", (done) => {
             const name = 'Tester123'
             chai.request(app)
                 .put("/api/contacts/" + name)
