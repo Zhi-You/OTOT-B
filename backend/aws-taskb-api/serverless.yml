@@ -1,0 +1,14 @@
+org: zhiyou
+app: aws-taskb-api
+service: aws-taskb-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  api:
+    handler: handler.handler
+    events:
+      - httpApi: '*'
