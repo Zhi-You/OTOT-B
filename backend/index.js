@@ -8,6 +8,8 @@ let mongoose = require('mongoose');
 let app = express();
 // Import routes
 let apiRoutes = require("./api-routes");
+// Use env files
+require('dotenv').config()
 
 // Configure bodyparser to handle post requests
 app.use(bodyParser.urlencoded({
@@ -15,12 +17,18 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+var mongoDBUrl = 'mongodb://localhost/ContactBook(TaskB)'
+// console.log(process.env.isPROD)
+if (process.env.isPROD == 'True')
+    var mongoDBUrl = process.env.PRODUrl;
+
 // Connect to Mongoose and set connection variable
-mongoose.connect('mongodb://localhost/ContactBook(TaskB)', 
+mongoose.connect(mongoDBUrl, 
 { 
     useNewUrlParser: true
 });
 
+console.log(mongoDBUrl)
 var db = mongoose.connection;
 
 // Added check for DB connection
