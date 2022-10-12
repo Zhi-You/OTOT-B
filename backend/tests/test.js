@@ -26,6 +26,7 @@ describe ('Contact app API Tests', () => {
         it("It should add a new contact - Tester123", (done) => {
             chai.request(app)
                 .post("/api/contacts")
+                .type("form")
                 .send({
                     "name": "Tester123",
                     "email": "tester123@gmail.com",
@@ -48,6 +49,7 @@ describe ('Contact app API Tests', () => {
         it("It should not add new contact as email is not specified", (done) => {
             chai.request(app)
                 .post("/api/contacts")
+                .type("form")
                 .send({
                     "name": "Tester123",
                     "phone": 987654321,
@@ -113,6 +115,7 @@ describe ('Contact app API Tests', () => {
             const name = 'Tester123'
             chai.request(app)
                 .put("/api/contacts/" + name)
+                .type("form")
                 .send(
                     {
                         "name": "Updated123",
