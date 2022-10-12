@@ -1,0 +1,58 @@
+org: zhiyou
+app: otot-b-api
+service: otot-b-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: dev
+  region: ap-southeast-1
+
+plugins:
+  - serverless-offline
+  
+functions:
+  app:
+    handler: index.handler
+    events:
+      - http:
+          path: /api/contacts
+          method: get
+          cors: true
+      - http:
+          path: /api/contacts
+          method: post
+          cors: true
+      - http:
+          path: /api/contacts/{contact_name}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                contact_name: true # mark as required
+      - http:
+          path: /api/contacts/{contact_name}
+          method: patch
+          cors: true
+          request:
+            parameters:
+              paths:
+                contact_name: true 
+      - http:
+          path: /api/contacts/{contact_name}
+          method: put
+          cors: true
+          request:
+            parameters:
+              paths:
+                contact_name: true 
+      - http:
+          path: /api/contacts/{contact_name}
+          method: delete
+          cors: true
+          request:
+            parameters:
+              paths:
+                contact_name: true
