@@ -68,5 +68,5 @@ app.listen(port, function () {
     console.log("Running ContactBook on port " + port);
 });
 
-// module.exports = app
-module.exports.handler = serverless(app);
+module.exports = app
+// module.exports.handler = serverless(app);

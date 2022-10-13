@@ -1,7 +1,7 @@
 // Import the dependencies for testing
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-let app = require('../index');
+let app = require('../index-test');
 
 // Configure chai
 chai.use(chaiHttp);
