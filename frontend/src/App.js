@@ -18,6 +18,7 @@ function App() {
             <h1 className="title">Add Contact</h1>
             <Form />
             <h1 className="title">Contacts</h1>
+
             <ContactList />
           </div>
         </div>

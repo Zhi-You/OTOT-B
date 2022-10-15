@@ -22,13 +22,28 @@ const ContactList = () => {
       return (
         <div className="columns contact mt-3 is-vcentered">
           <div className="column">
-            <div key={idx}>{contact.name}</div>
+            <div className="has-icons-left" key={idx}>
+              <span className="icon is-small is-left pr-3">
+                <i className="fas fa-user"></i>
+              </span>
+              {contact.name}
+            </div>
           </div>
           <div className="column">
-            <div key={idx}>{contact.email}</div>
+            <div className="has-icons-left" key={idx}>
+              <span className="icon is-small is-left pr-3">
+                <i className="fas fa-envelope"></i>
+              </span>
+              {contact.email}
+            </div>
           </div>
           <div className="column">
-            <div key={idx}>{contact.phone}</div>
+            <div className="has-icons-left" key={idx}>
+              <span className="icon is-small is-left pr-3">
+                <i className="fas fa-phone"></i>
+              </span>
+              {contact.phone}
+            </div>
           </div>
           <div className="column">
             <div key={idx}>{contact.gender}</div>

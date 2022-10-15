@@ -1,18 +1,65 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { API_URL } from "../configs";
 
 export default function Form() {
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    reset,
+    formState,
+    formState: { isSubmitSuccessful },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const [update, setUpdate] = useState(false);
+
+  //   const [name, setName] = useState("");
+  //   const [email, setEmail] = useState("");
+  //   const [phone, setPhone] = useState("");
+  //   const [gender, setGender] = useState("");
+
+  const onSubmit = async (event) => {
+    console.log(event);
+
+    try {
+      const { data } = await axios.post(`${API_URL}/api/contacts`, {
+        name: event.name,
+        email: event.email,
+        phone: event.phone,
+        gender: event.gender,
+      });
+      if (data.message === "New contact created!") {
+        // getAllContacts();
+        //resetForm();
+        console.log(data);
+      }
+    } catch (err) {
+      console.log("err: ", err);
+      //setErr(err);
+    }
+  };
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({ name: "", email: "", phone: "", gender: "" });
+    }
+  }, [formState, reset]);
+
+  var resetForm = () => {
+    console.log("Enter reset");
+    // document.forms["form"].getElementsByTagName("input").value = "";
+    var frm = document.getElementsByName("contact-form")[0];
+    frm.reset();
+  };
 
   return (
-    <form className="has-text-left" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      name="contact-form"
+      className="has-text-left"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="field">
         <label className="label">Name</label>
         <div className="control has-icons-left has-icons-right">
@@ -60,6 +107,9 @@ export default function Form() {
             <i className="fas fa-phone"></i>
           </span>
         </div>
+        <p className="help is-primary">
+          Phone number has to be exactly 8 digits
+        </p>
       </div>
       <div className="field">
         <label className="label">Gender</label>
@@ -81,7 +131,13 @@ export default function Form() {
           </button>
         </div>
         <div className="control">
-          <button className="button is-link is-light">Cancel</button>
+          <button
+            className="button is-link is-light"
+            type="button" // to override default behaviour of submitting the form
+            onClick={resetForm}
+          >
+            Reset
+          </button>
         </div>
       </div>
     </form>
