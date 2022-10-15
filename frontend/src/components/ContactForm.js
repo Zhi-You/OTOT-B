@@ -31,13 +31,12 @@ export default function Form() {
         gender: event.gender,
       });
       if (data.message === "New contact created!") {
-        // getAllContacts();
+        getAllContacts();
         //resetForm();
         console.log(data);
       }
     } catch (err) {
       console.log("err: ", err);
-      //setErr(err);
     }
   };
 
