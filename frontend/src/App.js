@@ -15,7 +15,7 @@ function App() {
                 <p className="subtitle">Zhi You's OTOT Task B Application!</p>
               </div>
             </section>
-            <h1 className="title">Add Contact</h1>
+            <h1 className="title">Add / Update Contact</h1>
             <Form />
             <h1 className="title">Contacts</h1>
 

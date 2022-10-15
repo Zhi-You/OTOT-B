@@ -16,3 +16,11 @@
 /* .icon {
   padding-right: 0.5em;
 } */
+
+.AlertPopup {
+  background-color: turquoise;
+  padding: 1em;
+  margin: 2em;
+  font-size: large;
+  color: black;
+}

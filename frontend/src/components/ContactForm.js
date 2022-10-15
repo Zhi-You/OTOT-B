@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { API_URL } from "../configs";
-import getAllContacts from "./ContactList";
+import Alert from "react-popup-alert";
+import "../App.css";
 
 export default function Form() {
   const {
@@ -14,6 +15,12 @@ export default function Form() {
     formState: { isSubmitSuccessful },
   } = useForm();
 
+  const [alert, setAlert] = useState({
+    type: "error",
+    text: "Can only update Existing Contact",
+    show: false,
+  });
+
   const [update, setUpdate] = useState(false);
 
   //   const [name, setName] = useState("");
@@ -21,33 +28,73 @@ export default function Form() {
   //   const [phone, setPhone] = useState("");
   //   const [gender, setGender] = useState("");
 
+  // When either Add or Update is clicked, contact data will be passed in as 'event' variable
   const onSubmit = async (event) => {
     console.log(event);
 
-    try {
-      await axios
-        .post(`${API_URL}/api/contacts`, {
-          name: event.name,
-          email: event.email,
-          phone: event.phone,
-          gender: event.gender,
-        })
-        .then((res) => {
-          console.log(res);
-          if (res.data.message === "New contact created!") {
-            // Refreshes the page to update contact list when useEffect is called in ContactList to get all contacts
-            window.location.reload();
-            //resetForm();
-          }
-        });
-    } catch (err) {
-      console.log("err: ", err);
+    if (!update) {
+      console.log("WE ARE ADDING A CONTACT");
+
+      // Function to handle when user clicks on Submit to add a new contact.
+      try {
+        await axios
+          .post(`${API_URL}/api/contacts`, {
+            name: event.name,
+            email: event.email,
+            phone: event.phone,
+            gender: event.gender,
+          })
+          .then((res) => {
+            console.log(res);
+            if (res.data.message === "New contact created!") {
+              // Refreshes the page to update contact list when useEffect is called in ContactList to get all contacts
+              window.location.reload();
+              //resetForm();
+            }
+          });
+      } catch (err) {
+        console.log("err: ", err);
+      }
+    } else {
+      console.log("WE ARE UPDATING A CONTACT");
+      var contact_name = event.name;
+      try {
+        await axios
+          .put(`${API_URL}/api/contacts/${contact_name}`, {
+            name: event.name,
+            email: event.email,
+            phone: event.phone,
+            gender: event.gender,
+          })
+          .then((res) => {
+            console.log(res);
+            if (res.data.message === "Contact Info updated") {
+              // Refreshes the page to update contact list when useEffect is called in ContactList to get all contacts
+              window.location.reload();
+              //resetForm();
+            }
+          });
+      } catch (err) {
+        // If user does not exist, will be catched in here as status returned = 404
+        console.log("err: ", err);
+        onShowAlert("error");
+      }
     }
   };
 
-  //   function updateContactList() {
-  //     getAllContacts();
-  //   }
+  // Function to handle when user clicks on Update to update an existing contact.
+  var onReset = () => {
+    console.log("enter update");
+    setUpdate(true);
+    console.log(update);
+  };
+
+  // Function to handle the case when update boolean is wrongly true
+  var resetUpdateValue = () => {
+    console.log("enter addition");
+    setUpdate(false);
+    console.log(update);
+  };
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
@@ -61,6 +108,22 @@ export default function Form() {
     var frm = document.getElementsByName("contact-form")[0];
     frm.reset();
   };
+
+  function onCloseAlert() {
+    setAlert({
+      type: "",
+      text: "",
+      show: false,
+    });
+  }
+
+  function onShowAlert(type) {
+    setAlert({
+      type: type,
+      text: "Can only update Existing Contact",
+      show: true,
+    });
+  }
 
   return (
     <form
@@ -134,8 +197,17 @@ export default function Form() {
       </div>
       <div className="field is-grouped">
         <div className="control">
-          <button className="button is-link" type="submit">
-            Submit
+          <button
+            className="button is-link"
+            type="submit"
+            onClick={resetUpdateValue}
+          >
+            Add
+          </button>
+        </div>
+        <div className="control">
+          <button className="button is-warning" type="submit" onClick={onReset}>
+            Update
           </button>
         </div>
         <div className="control">
@@ -147,6 +219,22 @@ export default function Form() {
             Reset
           </button>
         </div>
+      </div>
+      <div className="AlertPopup">
+        <Alert
+          header={"Update Error"}
+          btnText={"Close"}
+          text={alert.text}
+          type={alert.type}
+          show={alert.show}
+          onClosePress={onCloseAlert}
+          pressCloseOnOutsideClick={true}
+          showBorderBottom={true}
+          alertStyles={{}}
+          headerStyles={{}}
+          textStyles={{}}
+          buttonStyles={{}}
+        />
       </div>
     </form>
   );

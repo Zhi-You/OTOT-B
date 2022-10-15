@@ -60,8 +60,9 @@ const ContactList = () => {
   }
 
   const getContactsToRender = () => {
-    console.log(contacts);
+    // console.log(contacts);
     return contacts.map((contact, idx) => {
+      //   console.log(idx);
       return (
         <div className="columns contact mt-3 is-vcentered">
           <div className="column">
@@ -93,13 +94,41 @@ const ContactList = () => {
           </div>
           <div className="column is-narrow">
             <div className="buttons">
-              <button className="button is-warning">Update</button>
-              <button className="button is-danger">Delete</button>
+              {/* <button
+                className="button is-warning"
+                onClick={() => handleUpdateButton(idx)}
+              >
+                Update
+              </button> */}
+              <button
+                className="button is-danger"
+                onClick={() => deleteContact(contact)}
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
       );
     });
+  };
+
+  const deleteContact = async (contact) => {
+    var contact_name = contact.name;
+    try {
+      await axios
+        .delete(`${API_URL}/api/contacts/${contact_name}`)
+        .then((res) => {
+          console.log(res);
+          if (res.data.status === "success") {
+            // Refreshes the page to update contact list when useEffect is called in ContactList to get all contacts
+            window.location.reload();
+            //resetForm();
+          }
+        });
+    } catch (err) {
+      console.log("err: ", err);
+    }
   };
 
   return <div>{getContactsToRender()}</div>;
