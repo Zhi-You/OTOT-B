@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { API_URL } from "../configs";
+import getAllContacts from "./ContactList";
 
 export default function Form() {
   const {
@@ -24,21 +25,29 @@ export default function Form() {
     console.log(event);
 
     try {
-      const { data } = await axios.post(`${API_URL}/api/contacts`, {
-        name: event.name,
-        email: event.email,
-        phone: event.phone,
-        gender: event.gender,
-      });
-      if (data.message === "New contact created!") {
-        getAllContacts();
-        //resetForm();
-        console.log(data);
-      }
+      await axios
+        .post(`${API_URL}/api/contacts`, {
+          name: event.name,
+          email: event.email,
+          phone: event.phone,
+          gender: event.gender,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data.message === "New contact created!") {
+            // Refreshes the page to update contact list when useEffect is called in ContactList to get all contacts
+            window.location.reload();
+            //resetForm();
+          }
+        });
     } catch (err) {
       console.log("err: ", err);
     }
   };
+
+  //   function updateContactList() {
+  //     getAllContacts();
+  //   }
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {

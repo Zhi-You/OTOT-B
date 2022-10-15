@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { API_URL } from "../configs";
 
 const ContactList = () => {
-  // Keep track of all of our contacts, initialized to a set of empty objects
+  // Keep track of all of our contacts, initialized to a default set of contacts
   const [contacts, setContact] = useState([
     {
       name: "zhi you",
@@ -17,7 +19,48 @@ const ContactList = () => {
     },
   ]);
 
+  useEffect(() => {
+    getAllContacts();
+  }, []);
+
+  async function getAllContacts() {
+    try {
+      const data = await axios.get(`${API_URL}/api/contacts`);
+
+      console.log(data);
+
+      if (data.data.status === "success") {
+        var contacts = data.data.data;
+
+        // console.log(contacts);
+        // console.log(contacts[0].name);
+        // console.log(typeof contacts[0]);
+
+        // console.log((({ name, email }) => ({ name, email }))(contacts[0]));
+
+        var contactList = [];
+
+        contacts.forEach((contact) => {
+          contactList.push(
+            (({ name, email, phone, gender }) => ({
+              name,
+              email,
+              phone,
+              gender,
+            }))(contact)
+          );
+        });
+
+        console.log(contactList);
+        setContact(contactList);
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
   const getContactsToRender = () => {
+    console.log(contacts);
     return contacts.map((contact, idx) => {
       return (
         <div className="columns contact mt-3 is-vcentered">
