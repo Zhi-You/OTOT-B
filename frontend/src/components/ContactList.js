@@ -36,8 +36,6 @@ const ContactList = () => {
         // console.log(contacts[0].name);
         // console.log(typeof contacts[0]);
 
-        // console.log((({ name, email }) => ({ name, email }))(contacts[0]));
-
         var contactList = [];
 
         contacts.forEach((contact) => {
@@ -94,12 +92,6 @@ const ContactList = () => {
           </div>
           <div className="column is-narrow">
             <div className="buttons">
-              {/* <button
-                className="button is-warning"
-                onClick={() => handleUpdateButton(idx)}
-              >
-                Update
-              </button> */}
               <button
                 className="button is-danger"
                 onClick={() => deleteContact(contact)}
@@ -123,7 +115,6 @@ const ContactList = () => {
           if (res.data.status === "success") {
             // Refreshes the page to update contact list when useEffect is called in ContactList to get all contacts
             window.location.reload();
-            //resetForm();
           }
         });
     } catch (err) {

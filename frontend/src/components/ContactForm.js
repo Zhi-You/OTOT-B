@@ -23,11 +23,6 @@ export default function Form() {
 
   const [update, setUpdate] = useState(false);
 
-  //   const [name, setName] = useState("");
-  //   const [email, setEmail] = useState("");
-  //   const [phone, setPhone] = useState("");
-  //   const [gender, setGender] = useState("");
-
   // When either Add or Update is clicked, contact data will be passed in as 'event' variable
   const onSubmit = async (event) => {
     console.log(event);
@@ -49,7 +44,6 @@ export default function Form() {
             if (res.data.message === "New contact created!") {
               // Refreshes the page to update contact list when useEffect is called in ContactList to get all contacts
               window.location.reload();
-              //resetForm();
             }
           });
       } catch (err) {
@@ -71,7 +65,6 @@ export default function Form() {
             if (res.data.message === "Contact Info updated") {
               // Refreshes the page to update contact list when useEffect is called in ContactList to get all contacts
               window.location.reload();
-              //resetForm();
             }
           });
       } catch (err) {
